@@ -29,28 +29,23 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+class item {
+  item({required this.title, required this.done});
+  String title;
+  bool done;
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  List items = <String>[
-    'Write a book',
-    'Do homework',
-    'Tidy room',
-    'Watch TV',
-    'Nap',
-    'Eat',
-    'Sleep',
-    'Rave',
-    'Repeat',
-  ];
-  List done = <bool>[
-    false,
-    false,
-    false,
-    true,
-    false,
-    false,
-    false,
-    true,
-    false
+  List<item> items = <item>[
+    item(title: 'Write a book', done: false),
+    item(title: 'Do homework', done: false),
+    item(title: 'Tidy room', done: false),
+    item(title: 'Watch TV', done: true),
+    item(title: 'Nap', done: false),
+    item(title: 'Eat', done: false),
+    item(title: 'Sleep', done: false),
+    item(title: 'Rave', done: true),
+    item(title: 'Repeat', done: false),
   ];
 
   @override
@@ -76,25 +71,45 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: items.length,
         itemBuilder: (context, i) {
           return Card(
-            margin: const EdgeInsets.all(6),
+            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
             elevation: 2,
             child: ListTile(
-              leading: done[i].toString() == 'true'
+              leading: items[i].done.toString() == 'true'
                   ? const Icon(Icons.check_box_sharp)
                   : const Icon(Icons.check_box_outline_blank_outlined),
+              onTap: () {
+                setState(
+                  () {
+                    items[i].done.toString() == 'true'
+                        ? items[i].done = false
+                        : items[i].done = true;
+                  },
+                );
+              },
               title: Text(
-                items[i],
+                items[i].title,
                 style: GoogleFonts.raleway(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                   textStyle: TextStyle(
-                    decoration: done[i].toString() == 'true'
+                    decoration: items[i].done.toString() == 'true'
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
                 ),
               ),
-              trailing: const Icon(Icons.close),
+              trailing: IconButton(
+                onPressed: () {
+                  setState(
+                    () {
+                      items.removeWhere(
+                        (item) => item.title == items[i].title,
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.close),
+              ),
             ),
           );
         },
