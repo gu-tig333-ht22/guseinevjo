@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+//Remember to run "Flutter pub get" in the terminal to get the required packages to run this app
+
 void main() {
   runApp(const MyApp());
 }
@@ -74,9 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
             margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
             elevation: 2,
             child: ListTile(
+              //If item is done then mark checkbox as checked
               leading: items[i].done.toString() == 'true'
                   ? const Icon(Icons.check_box_sharp)
                   : const Icon(Icons.check_box_outline_blank_outlined),
+              //Mark item as done or not done
               onTap: () {
                 setState(
                   () {
@@ -87,11 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               title: Text(
+                //Loop through items and display them
                 items[i].title,
                 style: GoogleFonts.raleway(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                   textStyle: TextStyle(
+                    //If item is done then linethrough
                     decoration: items[i].done.toString() == 'true'
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
@@ -99,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               trailing: IconButton(
+                //Removes item from view when delete button is pressed
                 onPressed: () {
                   setState(
                     () {
