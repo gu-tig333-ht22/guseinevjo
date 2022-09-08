@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/constants/routes.dart';
 
 class TaskView extends StatefulWidget {
-  const TaskView({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const TaskView({Key? key}) : super(key: key);
 
   @override
   State<TaskView> createState() => TaskViewState();
@@ -21,11 +20,11 @@ class TaskViewState extends State<TaskView> {
     item(title: 'Write a book', done: false),
     item(title: 'Do homework', done: false),
     item(title: 'Tidy room', done: false),
-    item(title: 'Watch TV', done: true),
+    item(title: 'Watch TV', done: false),
     item(title: 'Nap', done: false),
     item(title: 'Eat', done: false),
     item(title: 'Sleep', done: false),
-    item(title: 'Rave', done: true),
+    item(title: 'Rave', done: false),
     item(title: 'Repeat', done: false),
   ];
 
@@ -38,7 +37,7 @@ class TaskViewState extends State<TaskView> {
         elevation: 2,
         title: Center(
           child: Text(
-            widget.title,
+            'TIG169 TODO',
             style: GoogleFonts.bebasNeue(
               fontSize: 30,
               textStyle: const TextStyle(

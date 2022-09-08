@@ -10,13 +10,11 @@ void main() {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: const TaskView(
-        title: 'hello',
-      ),
+      home: const TaskView(),
       debugShowCheckedModeBanner: false,
       routes: {
-        taskViewRoute: (context) => const TaskView(title: 'hello'),
-        addTaskViewRoute: (context) => const AddTaskView(title: 'hello'),
+        taskViewRoute: (context) => const TaskView(),
+        addTaskViewRoute: (context) => const AddTaskView(),
       },
     ),
   );

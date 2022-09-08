@@ -3,8 +3,7 @@ import '/constants/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddTaskView extends StatefulWidget {
-  const AddTaskView({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const AddTaskView({Key? key}) : super(key: key);
 
   @override
   State<AddTaskView> createState() => AddTaskViewState();
