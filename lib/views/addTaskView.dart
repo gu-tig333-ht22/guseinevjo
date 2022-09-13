@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '/constants/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../components/data.dart';
+import 'package:provider/provider.dart';
 
 class AddTaskView extends StatefulWidget {
   const AddTaskView({Key? key}) : super(key: key);
@@ -10,8 +12,10 @@ class AddTaskView extends StatefulWidget {
 }
 
 class AddTaskViewState extends State<AddTaskView> {
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final items = Provider.of<Items>(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -27,6 +31,7 @@ class AddTaskViewState extends State<AddTaskView> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: TextField(
+          controller: _controller,
           keyboardType: TextInputType.multiline,
           maxLines: null,
           style: GoogleFonts.raleway(
@@ -39,6 +44,15 @@ class AddTaskViewState extends State<AddTaskView> {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          items.items.add(Item(title: _controller.text, done: false));
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              taskViewRoute, (Route<dynamic> route) => false);
+        },
+        backgroundColor: Colors.deepOrange[400],
+        child: const Icon(Icons.add),
       ),
     );
   }
