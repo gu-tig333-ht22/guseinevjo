@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/constants/routes.dart';
 import 'package:provider/provider.dart';
-import '../components/data.dart';
+import '../components/model.dart';
 
 class TaskView extends StatefulWidget {
   const TaskView({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class TaskView extends StatefulWidget {
 class TaskViewState extends State<TaskView> {
   @override
   Widget build(BuildContext context) {
-    final items = Provider.of<Items>(context);
+    final items = Provider.of<ItemsState>(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -22,7 +22,7 @@ class TaskViewState extends State<TaskView> {
         elevation: 2,
         title: Center(
           child: Text(
-            'TIG169 TODO',
+            'TODO',
             style: GoogleFonts.bebasNeue(
               fontSize: 30,
               textStyle: const TextStyle(
@@ -40,10 +40,15 @@ class TaskViewState extends State<TaskView> {
             elevation: 2,
             child: ListTile(
               //If Item is done then mark checkbox as checked
-              leading: items.items[i].done
-                  ? const Icon(Icons.check_box_sharp)
-                  : const Icon(Icons.check_box_outline_blank_outlined),
-              //Mark Item as done or not done
+              leading: Provider.of<ItemsState>(context).items[i].done
+                  ? const Icon(
+                      Icons.check_box,
+                      color: Colors.deepOrange,
+                    )
+                  : const Icon(
+                      Icons.check_box_outline_blank,
+                      color: Colors.deepOrange,
+                    ),
               onTap: () {
                 setState(
                   () {
@@ -70,13 +75,8 @@ class TaskViewState extends State<TaskView> {
               trailing: IconButton(
                 //Removes Item from view when delete button is pressed
                 onPressed: () {
-                  setState(
-                    () {
-                      items.items.removeWhere(
-                        (Item) => Item.title == items.items[i].title,
-                      );
-                    },
-                  );
+                  Provider.of<ItemsState>(context, listen: false)
+                      .removeItem(items.items[i]);
                 },
                 icon: const Icon(Icons.close),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/constants/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../components/data.dart';
+import '../components/model.dart';
 import 'package:provider/provider.dart';
 
 class AddTaskView extends StatefulWidget {
@@ -15,7 +15,6 @@ class AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final items = Provider.of<Items>(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -47,9 +46,13 @@ class AddTaskViewState extends State<AddTaskView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          items.items.add(Item(title: _controller.text, done: false));
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              taskViewRoute, (Route<dynamic> route) => false);
+          if (_controller.text.isEmpty) {
+            return;
+          } else {
+            Provider.of<ItemsState>(context, listen: false)
+                .addItem(Item(title: _controller.text, done: false));
+            Navigator.pop(context, taskViewRoute);
+          }
         },
         backgroundColor: Colors.deepOrange[400],
         child: const Icon(Icons.add),
