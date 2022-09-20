@@ -34,8 +34,13 @@ class ItemsState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void isDone(Item item) {
-    item.itemDone(item);
+  void toggleDone(Item item) {
+    item.done = !item.done;
+    notifyListeners();
+  }
+
+  void clearDone() {
+    _items.removeWhere((Item item) => item.done == true);
     notifyListeners();
   }
 }

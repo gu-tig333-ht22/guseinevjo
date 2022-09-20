@@ -14,12 +14,12 @@ class TaskView extends StatefulWidget {
 class TaskViewState extends State<TaskView> {
   @override
   Widget build(BuildContext context) {
-    final items = Provider.of<ItemsState>(context);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.deepOrange[400],
         elevation: 2,
+        centerTitle: true,
         title: Center(
           child: Text(
             'TODO',
@@ -31,8 +31,25 @@ class TaskViewState extends State<TaskView> {
             ),
           ),
         ),
+        actions: [menuButton()],
       ),
-      body: ListView.builder(
+      body: todoList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(addTaskViewRoute);
+        },
+        backgroundColor: Colors.deepOrange[400],
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+//consumer to return todo list
+Widget todoList() {
+  return Consumer<ItemsState>(
+    builder: (context, items, child) {
+      return ListView.builder(
         itemCount: items.items.length,
         itemBuilder: (context, i) {
           return Card(
@@ -50,23 +67,21 @@ class TaskViewState extends State<TaskView> {
                       color: Colors.deepOrange,
                     ),
               onTap: () {
-                setState(
-                  () {
-                    items.items[i].done
-                        ? items.items[i].done = false
-                        : items.items[i].done = true;
-                  },
-                );
+                Provider.of<ItemsState>(context, listen: false)
+                    .toggleDone(items.items[i]);
               },
               title: Text(
                 //Loop through items and display them
                 items.items[i].title,
+                maxLines: 1,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.raleway(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                   textStyle: TextStyle(
                     //If Item is done then linethrough
-                    decoration: items.items[i].done
+                    decoration: Provider.of<ItemsState>(context).items[i].done
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
@@ -83,14 +98,24 @@ class TaskViewState extends State<TaskView> {
             ),
           );
         },
+      );
+    },
+  );
+}
+
+Widget menuButton() {
+  return PopupMenuButton(
+    itemBuilder: (context) => [
+      //menu button showDone, showUndone, and showAll
+      PopupMenuItem(
+        child: TextButton(
+          onPressed: () {
+            Provider.of<ItemsState>(context, listen: false).clearDone();
+            Navigator.pop(context);
+          },
+          child: const Text('Clear Done'),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(addTaskViewRoute);
-        },
-        backgroundColor: Colors.deepOrange[400],
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+    ],
+  );
 }
