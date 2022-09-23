@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/constants/routes.dart';
 import 'package:provider/provider.dart';
-import '../components/model.dart';
+import '../components/provider.dart';
 
 class TaskView extends StatefulWidget {
   const TaskView({Key? key}) : super(key: key);

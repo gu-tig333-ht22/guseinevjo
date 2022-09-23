@@ -3,6 +3,7 @@ import '/constants/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../components/model.dart';
 import 'package:provider/provider.dart';
+import '../components/provider.dart';
 
 class AddTaskView extends StatefulWidget {
   const AddTaskView({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class AddTaskViewState extends State<AddTaskView> {
             return;
           } else {
             Provider.of<ItemsState>(context, listen: false)
-                .addItem(Item(title: _controller.text, done: false));
+                .addItem(Item(id: "", title: _controller.text, done: false));
             Navigator.pop(context, taskViewRoute);
           }
         },

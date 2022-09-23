@@ -1,46 +1,26 @@
-import 'package:flutter/material.dart';
-
 class Item {
-  Item({required this.title, this.done = false});
+  Item({required this.title, this.done = false, required this.id});
   String title;
   bool done;
+  String id;
+
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      title: json['title'],
+      done: json['done'],
+      id: json['id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'done': done,
+      'id': id,
+    };
+  }
 
   void itemDone(Item) {
     done = !done;
-  }
-}
-
-class ItemsState extends ChangeNotifier {
-  final List<Item> _items = <Item>[
-    Item(title: 'Write a book', done: false),
-    Item(title: 'Do homework', done: false),
-    Item(title: 'Tidy room', done: false),
-    Item(title: 'Watch TV', done: false),
-    Item(title: 'Nap', done: false),
-    Item(title: 'Eat', done: false),
-    Item(title: 'Sleep', done: false),
-    Item(title: 'Rave', done: false),
-    Item(title: 'Repeat', done: false),
-  ];
-  List<Item> get items => _items;
-
-  void addItem(Item item) {
-    _items.add(item);
-    notifyListeners();
-  }
-
-  void removeItem(Item item) {
-    _items.remove(item);
-    notifyListeners();
-  }
-
-  void toggleDone(Item item) {
-    item.done = !item.done;
-    notifyListeners();
-  }
-
-  void clearDone() {
-    _items.removeWhere((Item item) => item.done == true);
-    notifyListeners();
   }
 }

@@ -3,7 +3,7 @@ import 'package:template/views/addTaskView.dart';
 import 'package:template/views/taskView.dart';
 import '/constants/routes.dart';
 import 'package:provider/provider.dart';
-import 'components/model.dart';
+import '../components/provider.dart';
 ////Remember to run "Flutter pub get" in the terminal to get the required packages to run this app
 
 void main() {
