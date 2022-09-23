@@ -18,11 +18,15 @@ class ItemsState extends ChangeNotifier {
     http.Response answer = await http.get(Uri.parse('$apiUrl$apiKey'));
     if (answer.statusCode == 200) {
       List<dynamic> data = jsonDecode(answer.body);
-      _items.clear();
-      data.forEach((item) {
-        _items.add(Item.fromJson(item));
-      });
+      updateItems(data);
       notifyListeners();
+    }
+  }
+
+  void updateItems(List<dynamic> data) {
+    _items.clear();
+    for (var item in data) {
+      _items.add(Item.fromJson(item));
     }
   }
 
@@ -35,6 +39,7 @@ class ItemsState extends ChangeNotifier {
     if (answer.statusCode == 200) {
       _items.add(item);
       notifyListeners();
+      updateItems(jsonDecode(answer.body));
     }
   }
 
@@ -44,6 +49,7 @@ class ItemsState extends ChangeNotifier {
     if (answer.statusCode == 200) {
       _items.remove(item);
       notifyListeners();
+      updateItems(jsonDecode(answer.body));
     }
   }
 
@@ -57,6 +63,7 @@ class ItemsState extends ChangeNotifier {
             body: jsonEncode(item.toJson()));
     if (answer.statusCode == 200) {
       notifyListeners();
+      updateItems(jsonDecode(answer.body));
     }
   }
 
