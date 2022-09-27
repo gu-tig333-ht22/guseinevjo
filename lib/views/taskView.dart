@@ -73,7 +73,7 @@ Widget todoList() {
               title: Text(
                 //Loop through items and display them
                 items.items[i].title,
-                maxLines: 1,
+                maxLines: 2,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.raleway(
