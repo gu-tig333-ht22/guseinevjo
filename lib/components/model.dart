@@ -20,7 +20,7 @@ class Item {
     };
   }
 
-  void itemDone(Item) {
+  void itemDone(Item item) {
     done = !done;
   }
 }

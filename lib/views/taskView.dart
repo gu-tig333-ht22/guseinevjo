@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '/constants/routes.dart';
 import 'package:provider/provider.dart';
 import '../components/provider.dart';
+import '../components/model.dart';
 
 class TaskView extends StatefulWidget {
   const TaskView({Key? key}) : super(key: key);
@@ -31,7 +32,19 @@ class TaskViewState extends State<TaskView> {
             ),
           ),
         ),
-        actions: [menuButton()],
+        //filteritems on value
+        actions: [
+          PopupMenuButton(
+            onSelected: (String done) {
+              Provider.of<ItemsState>(context, listen: false).filterItems(done);
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'all', child: Text('All')),
+              const PopupMenuItem(value: 'done', child: Text('Done')),
+              const PopupMenuItem(value: 'undone', child: Text('Undone'))
+            ],
+          ),
+        ],
       ),
       body: todoList(),
       floatingActionButton: FloatingActionButton(
@@ -43,79 +56,69 @@ class TaskViewState extends State<TaskView> {
       ),
     );
   }
-}
 
-//consumer to return todo list
-Widget todoList() {
-  return Consumer<ItemsState>(
-    builder: (context, items, child) {
-      return ListView.builder(
+  Widget todoList() {
+    return Consumer<ItemsState>(
+      builder: (context, items, child) => ListView.builder(
         itemCount: items.items.length,
-        itemBuilder: (context, i) {
-          return Card(
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            elevation: 2,
-            child: ListTile(
-              //If Item is done then mark checkbox as checked
-              leading: Provider.of<ItemsState>(context).items[i].done
-                  ? const Icon(
-                      Icons.check_box,
-                      color: Colors.deepOrange,
-                    )
-                  : const Icon(
-                      Icons.check_box_outline_blank,
-                      color: Colors.deepOrange,
-                    ),
-              onTap: () {
-                Provider.of<ItemsState>(context, listen: false)
-                    .toggleDone(items.items[i]);
+        itemBuilder: (context, index) {
+          if (items.filter == 'all') {
+            return todoItem(items.items[index]);
+          } else if (items.filter == 'done') {
+            if (items.items[index].done) {
+              return todoItem(items.items[index]);
+            }
+          } else if (items.filter == 'undone') {
+            if (!items.items[index].done) {
+              return todoItem(items.items[index]);
+            }
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget todoItem(Item item) {
+    return Consumer<ItemsState>(
+      builder: (context, items, child) => Dismissible(
+        key: Key(item.id),
+        onDismissed: (direction) {
+          items.removeItem(item);
+        },
+        child: Card(
+          elevation: 2,
+          margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+          child: ListTile(
+            leading: Checkbox(
+              activeColor: Colors.deepOrange[400],
+              value: item.done,
+              onChanged: (value) {
+                items.toggleDone(item);
               },
-              title: Text(
-                //Loop through items and display them
-                items.items[i].title,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.raleway(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  textStyle: TextStyle(
-                    //If Item is done then linethrough
-                    decoration: Provider.of<ItemsState>(context).items[i].done
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  ),
+            ),
+            title: Text(
+              item.title,
+              maxLines: 2,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.raleway(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                textStyle: TextStyle(
+                  decoration: item.done ? TextDecoration.lineThrough : null,
                 ),
               ),
-              trailing: IconButton(
-                //Removes Item from view when delete button is pressed
-                onPressed: () {
-                  Provider.of<ItemsState>(context, listen: false)
-                      .removeItem(items.items[i]);
-                },
-                icon: const Icon(Icons.close),
-              ),
             ),
-          );
-        },
-      );
-    },
-  );
-}
-
-Widget menuButton() {
-  return PopupMenuButton(
-    itemBuilder: (context) => [
-      //menu button showDone, showUndone, and showAll
-      PopupMenuItem(
-        child: TextButton(
-          onPressed: () {
-            Provider.of<ItemsState>(context, listen: false).clearDone();
-            Navigator.pop(context);
-          },
-          child: const Text('Clear Done'),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                items.removeItem(item);
+              },
+            ),
+          ),
         ),
       ),
-    ],
-  );
+    );
+  }
 }
