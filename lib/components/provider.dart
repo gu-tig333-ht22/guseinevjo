@@ -7,6 +7,9 @@ class ItemsState extends ChangeNotifier {
   final List<Item> _items = [];
   List<Item> get items => _items;
 
+  String _filter = 'all';
+  String get filter => _filter;
+
   String apiUrl = "https://todoapp-api.apps.k8s.gu.se/todos";
   String apiKey = "?key=9026221e-4436-4fa1-abc6-c3109a269aff";
 
@@ -33,7 +36,7 @@ class ItemsState extends ChangeNotifier {
   void addItem(Item item) async {
     http.Response answer = await http.post(Uri.parse('$apiUrl$apiKey'),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+          'Content-Type': 'application/json',
         },
         body: jsonEncode(item.toJson()));
     if (answer.statusCode == 200) {
@@ -58,7 +61,7 @@ class ItemsState extends ChangeNotifier {
     http.Response answer =
         await http.put(Uri.parse('$apiUrl/${item.id}$apiKey'),
             headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
+              'Content-Type': 'application/json',
             },
             body: jsonEncode(item.toJson()));
     if (answer.statusCode == 200) {
@@ -67,15 +70,8 @@ class ItemsState extends ChangeNotifier {
     }
   }
 
-  void clearDone() async {
-    List<Item> doneItems = _items.where((item) => item.done).toList();
-    for (var item in doneItems) {
-      http.Response answer =
-          await http.delete(Uri.parse('$apiUrl/${item.id}$apiKey'));
-      if (answer.statusCode == 200) {
-        _items.remove(item);
-      }
-    }
+  void filterItems(String filter) {
+    _filter = filter;
     notifyListeners();
   }
 }
